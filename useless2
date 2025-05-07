@@ -1,0 +1,286 @@
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+
+local placeId = game.PlaceId
+
+local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Nasrali11448/FaxvKM/refs/heads/main/Lib.lua", true))()
+
+if placeId == 70876832253163 then
+
+
+local function SilentLoadString(url)
+    print = function() end
+    warn = function() end
+
+    local success, result = pcall(function()
+        loadstring(game:HttpGet(url))()
+    end)
+end
+
+
+
+local Win = Lib:CreateWindow("ah", 1, nil, nil)
+
+local PremCTab, name = Win:CreateTab("Premium", function() end)
+
+PremCTab:CreateButton("Auto Win", function()
+    SilentLoadString("https://raw.githubusercontent.com/hbjrev/bypass.github.io/refs/heads/main/anticheat.lua")
+
+    local player = game:GetService("Players").LocalPlayer
+    local gui, button
+
+    for _, child in ipairs(player:WaitForChild("PlayerGui"):GetChildren()) do
+        local success, frame = pcall(function()
+            return child:FindFirstChild("Frame")
+        end)
+        if success and frame and frame:FindFirstChildWhichIsA("TextButton") then
+            gui = child
+            button = frame:FindFirstChildWhichIsA("TextButton")
+            break
+        end
+    end
+
+    if gui and button then
+        gui.Enabled = false
+        task.wait(1)
+        pcall(function()
+            for _, connection in pairs(getconnections(button.MouseButton1Click)) do
+                connection:Fire()
+            end
+        end)
+    end
+
+    wait(3)
+
+    local Crank_Cooldown = 600
+    local Crank_StartTime = tick() - workspace.DistributedGameTime
+    local character = player.Character or player.CharacterAdded:Wait()
+    local hrp = character:WaitForChild("HumanoidRootPart")
+
+    local gui2 = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+    gui2.Name = "CooldownTimer"
+
+    local label = Instance.new("TextLabel", gui2)
+    label.Size = UDim2.new(0, 200, 0, 30)
+    label.Position = UDim2.new(1, -210, 0, 10)
+    label.BackgroundTransparency = 0.5
+    label.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    label.TextColor3 = Color3.new(1, 1, 1)
+    label.Font = Enum.Font.SourceSansBold
+    label.TextScaled = true
+
+    task.spawn(function()
+        local timePassed = tick() - Crank_StartTime
+        local timeLeft = math.max(0, Crank_Cooldown - timePassed)
+
+        if timeLeft > 0 and hrp then
+        wait(1)
+            hrp.CFrame = CFrame.new(-338, 3, -49045)
+        end
+
+        while true do
+            timePassed = tick() - Crank_StartTime
+            timeLeft = math.max(0, Crank_Cooldown - timePassed)
+            local minutes = math.floor(timeLeft / 60)
+            local seconds = math.floor(timeLeft % 60)
+
+            if timeLeft <= 0 then
+                label.Text = "Ready"
+                task.wait(2)
+                gui2:Destroy()
+
+                if hrp then
+                    hrp.CFrame = CFrame.new(-338, 3, -49045)
+                end
+                wait(1)
+
+                if fireproximityprompt then
+                    for _, descendant in ipairs(workspace:GetDescendants()) do
+                        if descendant:IsA("ProximityPrompt") then
+                            pcall(function()
+                                fireproximityprompt(descendant)
+                            end)
+                        end
+                    end
+                end
+                break
+            else
+                label.Text = string.format("%02d:%02d", minutes, seconds)
+            end
+
+            task.wait(1)
+        end
+    end)
+end)
+
+
+
+
+PremCTab:CreateButton("Auto Bond", function()
+    SilentLoadString("https://raw.githubusercontent.com/Nasrali11448/FaxvKM/refs/heads/main/Farm")
+end)
+
+PremCTab:CreateButton("Temp Bypass AntiCheat", function()
+    local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
+    local char = player.Character or player.CharacterAdded:Wait()
+    local humanoid = char:WaitForChild("Humanoid")
+    local hrp = char:WaitForChild("HumanoidRootPart")
+    local originalPos = hrp.Position
+
+    local fakeHRP
+    local originalHRP = hrp
+    local toggleState = false
+
+    local function BypassON()
+        fakeHRP = hrp:Clone()
+        fakeHRP.Name = "HumanoidRootPart"
+        fakeHRP.Parent = char
+
+        originalHRP.Anchored = true
+        originalHRP.CanCollide = false
+        originalHRP.Transparency = 1
+        originalHRP.Parent = workspace
+        originalHRP.CFrame = CFrame.new(0, -5000, 0)
+
+        for _, d in pairs(char:GetDescendants()) do
+            if d:IsA("Motor6D") and d.Part0 == originalHRP then
+                d.Part0 = fakeHRP
+            end
+        end
+
+        char:MoveTo(originalPos + Vector3.new(0, 1000000, 0))
+        task.wait(0.2)
+        char:MoveTo(originalPos)
+    end
+
+    local function BypassOFF()
+        if fakeHRP then
+            for _, d in pairs(char:GetDescendants()) do
+                if d:IsA("Motor6D") and d.Part0 == fakeHRP then
+                    d.Part0 = originalHRP
+                end
+            end
+
+            originalHRP.Parent = char
+            originalHRP.Anchored = false
+            originalHRP.CanCollide = true
+            originalHRP.Transparency = 0
+
+            fakeHRP:Destroy()
+            fakeHRP = nil
+        end
+    end
+
+    local function CtrTG()
+        local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+        local TGBtn = Instance.new("TextButton", screenGui)
+        TGBtn.Size = UDim2.new(0, 200, 0, 50)
+        TGBtn.Position = UDim2.new(0, 20, 0, 20)
+        TGBtn.Text = "Bypass: OFF"
+        TGBtn.BackgroundColor3 = Color3.new(1, 0, 0)
+        TGBtn.TextColor3 = Color3.new(1, 1, 1)
+        TGBtn.Font = Enum.Font.SourceSansBold
+        TGBtn.TextScaled = true
+        TGBtn.Draggable = true
+
+        TGBtn.MouseButton1Click:Connect(function()
+            toggleState = not toggleState
+            if toggleState then
+                TGBtn.Text = "Bypass: ON"
+                TGBtn.BackgroundColor3 = Color3.new(0, 1, 0)
+                BypassON()
+            else
+                TGBtn.Text = "Bypass: OFF"
+                TGBtn.BackgroundColor3 = Color3.new(1, 0, 0)
+                BypassOFF()
+            end
+        end)
+    end
+
+    CtrTG()
+end)
+
+
+PremCTab:CreateButton("Bypass AntiCheat", function()
+    local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
+    local char = player.Character or player.CharacterAdded:Wait()
+    local humanoid = char:WaitForChild("Humanoid")
+    local hrp = char:WaitForChild("HumanoidRootPart")
+    local originalPos = hrp.Position
+    local oldPos = hrp.Position
+
+    local fakeHRP = hrp:Clone()
+    fakeHRP.Name = "HumanoidRootPart"
+    fakeHRP.Parent = char
+
+    local originalHRP = hrp
+    originalHRP.Anchored = true
+    originalHRP.CanCollide = false
+    originalHRP.Transparency = 1
+    originalHRP.Parent = workspace
+    originalHRP.CFrame = CFrame.new(0, -5000, 0)
+
+    for _, d in pairs(char:GetDescendants()) do
+        if d:IsA("Motor6D") and d.Part0 == originalHRP then
+            d.Part0 = fakeHRP
+        end
+    end
+
+    char:MoveTo(originalPos + Vector3.new(0, 1000000, 0))
+    task.wait(0.2)
+    char:MoveTo(oldPos)
+
+    local seatedConn
+    seatedConn = humanoid.Seated:Connect(function(isSitting)
+        if isSitting then
+            for _, d in pairs(char:GetDescendants()) do
+                if d:IsA("Motor6D") and d.Part0 == fakeHRP then
+                    d.Part0 = originalHRP
+                end
+            end
+            originalHRP.Parent = char
+            originalHRP.Anchored = false
+            originalHRP.CanCollide = true
+            originalHRP.Transparency = 0
+            fakeHRP:Destroy()
+            seatedConn:Disconnect()
+        end
+    end)
+end)
+
+
+
+
+PremCTab:CreateButton("Bypass AntiCheat V2 [BETA]", function()
+    SilentLoadString("https://raw.githubusercontent.com/hbjrev/bypass.github.io/refs/heads/main/anticheat.lua")
+
+    local player = game:GetService("Players").LocalPlayer
+    local gui, button
+
+    for _, child in ipairs(player:WaitForChild("PlayerGui"):GetChildren()) do
+        local success, frame = pcall(function()
+            return child:FindFirstChild("Frame")
+        end)
+        if success and frame and frame:FindFirstChildWhichIsA("TextButton") then
+            gui = child
+            button = frame:FindFirstChildWhichIsA("TextButton")
+            break
+        end
+    end
+
+    if gui and button then
+        gui.Enabled = false
+        task.wait(1)
+        pcall(function()
+            for _, connection in pairs(getconnections(button.MouseButton1Click)) do
+                connection:Fire()
+            end
+        end)
+    end
+end)
+
+else
+end
